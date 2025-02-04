@@ -1,0 +1,12 @@
+server:
+  port: # Server Port
+  env: # Server Environment
+
+storage:
+  database_url: # Database URL
+  redis_url: # Redis URL
+
+aws_s3:
+  key: # AWS Access Key
+  secret: # AWS Secret Key
+  endpoint: # AWS Endpoint
