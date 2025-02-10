@@ -76,9 +76,10 @@ func Setup() {
 
 	// Load Minio
 	S3, err = minio.New(Config.AWS.Endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(Config.AWS.Key, Config.AWS.Secret, ""),
-		Secure: true,
-		Region: "us-east-1",
+		Creds:        credentials.NewStaticV4(Config.AWS.Key, Config.AWS.Secret, ""),
+		Secure:       true,
+		BucketLookup: minio.BucketLookupPath,
+		Region:       "us-east-1",
 	})
 
 	if err != nil {

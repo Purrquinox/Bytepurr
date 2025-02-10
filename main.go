@@ -15,7 +15,7 @@ import (
 	"popkat/state"
 	"popkat/types"
 
-	"popkat/routes/objects"
+	"popkat/routes/files"
 
 	"github.com/cloudflare/tableflip"
 	docs "github.com/infinitybotlist/eureka/doclib"
@@ -70,7 +70,7 @@ func main() {
 			Title:          "Popkat by Purrquinox",
 			TermsOfService: "https:purrquinox.com/legal/terms",
 			Version:        "2.0",
-			Description:    "",
+			Description:    "Popkat is a small content delivery network application programming interface made for simplifying Purrquinox operations.",
 			Contact: docs.Contact{
 				Name:  "Purrquinox",
 				URL:   "https://purrquinox.com",
@@ -98,7 +98,7 @@ func main() {
 	)
 
 	routers := []uapi.APIRouter{
-		&objects.Router{},
+		&files.Router{},
 	}
 
 	for _, router := range routers {

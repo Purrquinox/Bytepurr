@@ -1,8 +1,9 @@
-package list_objects
+package files
 
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"popkat/state"
 
@@ -11,17 +12,24 @@ import (
 	"github.com/minio/minio-go/v7"
 )
 
-func Docs() *docs.Doc {
+type Object struct {
+	Key          string    `json:"key"`
+	Size         int64     `json:"size"`
+	LastModified time.Time `json:"lastmodified"`
+	ETag         string    `json:"etag"`
+}
+
+func ListDocs() *docs.Doc {
 	return &docs.Doc{
 		Summary:     "List Objects",
 		Description: "List All Objects",
 		Params:      []docs.Parameter{},
-		Resp:        []map[string]interface{}{},
+		Resp:        []Object{},
 	}
 }
 
-func Route(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
-	objects := []map[string]interface{}{}
+func ListRoute(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
+	objects := []Object{}
 	objectCh := state.S3.ListObjects(context.Background(), "popkat", minio.ListObjectsOptions{
 		Recursive: true,
 	})
@@ -30,11 +38,11 @@ func Route(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
 		if object.Err != nil {
 			return uapi.DefaultResponse(http.StatusInternalServerError)
 		}
-		objects = append(objects, map[string]interface{}{
-			"Key":          object.Key,
-			"Size":         object.Size,
-			"LastModified": object.LastModified,
-			"ETag":         object.ETag,
+		objects = append(objects, Object{
+			Key:          object.Key,
+			Size:         object.Size,
+			LastModified: object.LastModified,
+			ETag:         object.ETag,
 		})
 	}
 

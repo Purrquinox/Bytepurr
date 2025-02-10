@@ -2,6 +2,7 @@ package constants
 
 const (
 	ResourceNotFound    = "{\"message\":\"Slow down, bucko! We couldn't find this resource *anywhere*!\"}"
+	FileNotFound        = "{\"message\":\"Slow down, bucko! We couldn't find the requested file *anywhere*!\"}"
 	EndpointNotFound    = "{\"message\":\"Slow down, bucko! You got the path wrong or something but this endpoint doesn't exist!\"}"
 	BadRequest          = "{\"message\":\"Slow down, bucko! You're doing something illegal!!!\"}"
 	Forbidden           = "{\"message\":\"Slow down, bucko! You're not allowed to do this!\"}"
