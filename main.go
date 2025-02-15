@@ -1,8 +1,12 @@
 package main
 
 import (
+	"compress/flate"
+	"compress/gzip"
 	"html/template"
+	"io"
 	"net/http"
+	"strings"
 
 	"os"
 	"os/signal"
@@ -59,6 +63,57 @@ func corsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// Compression Middleware
+type gzipResponseWriter struct {
+	http.ResponseWriter
+	Writer io.Writer
+}
+
+func (g *gzipResponseWriter) Write(b []byte) (int, error) {
+	return g.Writer.Write(b)
+}
+
+func CompressionMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Check if the client supports compression
+		encoding := r.Header.Get("Accept-Encoding")
+
+		// Avoid compressing already compressed content
+		contentType := w.Header().Get("Content-Type")
+		if strings.Contains(contentType, "image") || strings.Contains(contentType, "video") || strings.Contains(contentType, "zip") {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		// Apply gzip compression
+		if strings.Contains(encoding, "gzip") {
+			gz := gzip.NewWriter(w)
+			defer gz.Close()
+
+			w.Header().Set("Content-Encoding", "gzip")
+			w.Header().Set("Vary", "Accept-Encoding")
+
+			next.ServeHTTP(&gzipResponseWriter{ResponseWriter: w, Writer: gz}, r)
+			return
+		}
+
+		// Apply deflate compression
+		if strings.Contains(encoding, "deflate") {
+			fl, _ := flate.NewWriter(w, flate.DefaultCompression)
+			defer fl.Close()
+
+			w.Header().Set("Content-Encoding", "deflate")
+			w.Header().Set("Vary", "Accept-Encoding")
+
+			next.ServeHTTP(&gzipResponseWriter{ResponseWriter: w, Writer: fl}, r)
+			return
+		}
+
+		// If no compression is supported, proceed as usual
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	state.Setup()
 
@@ -94,6 +149,7 @@ func main() {
 		middleware.RealIP,
 		middleware.CleanPath,
 		corsMiddleware,
+		CompressionMiddleware,
 		zapchi.Logger(state.Logger, "api"),
 		middleware.Timeout(30*time.Second),
 	)
