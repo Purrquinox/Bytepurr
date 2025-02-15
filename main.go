@@ -15,6 +15,7 @@ import (
 	"popkat/state"
 	"popkat/types"
 
+	"popkat/routes/admin"
 	"popkat/routes/files"
 
 	"github.com/cloudflare/tableflip"
@@ -99,6 +100,7 @@ func main() {
 
 	routers := []uapi.APIRouter{
 		&files.Router{},
+		&admin.Router{},
 	}
 
 	for _, router := range routers {

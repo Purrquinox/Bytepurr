@@ -27,7 +27,7 @@ func GetFileDocs() *docs.Doc {
 			Required:    true,
 			Schema:      docs.IdSchema,
 		}},
-		Resp: []interface{}{},
+		Resp: []byte{},
 	}
 }
 

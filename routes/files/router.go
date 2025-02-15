@@ -5,21 +5,19 @@ import (
 	"github.com/infinitybotlist/eureka/uapi"
 )
 
-const tagName = "Objects"
-
 type Router struct{}
 
 func (b Router) Tag() (string, string) {
-	return tagName, "These API endpoints are related to Popkat files"
+	return "Files", "Hello, there. This category of endpoints are to allow users to add new content and view currently uploaded files."
 }
 
 func (b Router) Routes(r *chi.Mux) {
 	uapi.Route{
-		Pattern: "/objects/list",
-		OpId:    "listObjects",
-		Method:  uapi.GET,
-		Docs:    ListDocs,
-		Handler: ListRoute,
+		Pattern: "/upload",
+		OpId:    "upload",
+		Method:  uapi.POST,
+		Docs:    UploadDocs,
+		Handler: UploadRoute,
 	}.Route(r)
 
 	uapi.Route{
@@ -28,5 +26,13 @@ func (b Router) Routes(r *chi.Mux) {
 		Method:  uapi.GET,
 		Docs:    GetFileDocs,
 		Handler: GetRoute,
+	}.Route(r)
+
+	uapi.Route{
+		Pattern: "/{file}/meta",
+		OpId:    "getFileMetadata",
+		Method:  uapi.GET,
+		Docs:    GetMetadataDocs,
+		Handler: GetMetadataRoute,
 	}.Route(r)
 }
