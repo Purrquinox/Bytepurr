@@ -66,7 +66,6 @@ func Setup() {
 	}
 
 	Redis = redis.NewClient(rOptions)
-
 	if err := Redis.Ping(Context).Err(); err != nil {
 		panic("Failed to connect to Redis: " + err.Error())
 	}
@@ -81,7 +80,6 @@ func Setup() {
 		BucketLookup: minio.BucketLookupPath,
 		Region:       "us-east-1",
 	})
-
 	if err != nil {
 		Logger.Fatal("Failed to initialize Minio: ", zap.Error(err))
 	}
