@@ -6,7 +6,7 @@ import (
 	"popkat/state"
 	"popkat/types"
 
-	"github.com/infinitybotlist/eureka/uapi"
+	"popkat/uapi"
 )
 
 type DefaultResponder struct{}

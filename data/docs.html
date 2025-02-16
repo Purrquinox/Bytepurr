@@ -1,31 +1,92 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-us">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/redoc@next/themes/material.css">
-
     <title>Popkat V2 by Purrquinox</title>
     <meta property="og:title" content="Popkat V2 by Purrquinox">
-    <meta name="description" content="Hello, there. Here's the official API Documentation for Popkat V2 by Purrquinox.">
-    <meta property="og:description" content="Hello, there. Here's the official API Documentation for Popkat V2 by Purrquinox.">
+    <meta name="description" content="Official API Documentation for Popkat V2 by Purrquinox.">
+    <meta property="og:description" content="Official API Documentation for Popkat V2 by Purrquinox.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://purrquinox.com/logo.png">
+    <link rel="icon" type="image/png" href="https://purrquinox.com/logo.png">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.css">
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-          margin: 0;
-          padding: 0;
+            margin: 0;
+            padding: 0;
+            font-family: "Montserrat", sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .redoc-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
         }
     </style>
 </head>
 
 <body>
-    <redoc spec-url={{.url}} hideDownloadButton=true required-props-first=true theme='{
-      "sidebar": {
-        "backgroundColor": "lightblue"
-      }
-    }'></redoc>
-    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"> </script>
+    <div id="redoc-container"></div>
+
+    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+    <script>
+        Redoc.init("{{.url}}", {
+            hideDownloadButton: true,
+            requiredPropsFirst: true,
+            scrollYOffset: "header",
+            suppressWarnings: true,
+            expandResponses: "all",
+            theme: {
+                colors: {
+                    primary: { main: "#bb86fc" },
+                    success: { main: "#03dac6" },
+                    warning: { main: "#ffb74d" },
+                    error: { main: "#cf6679" },
+                    text: { primary: "#e0e0e0", secondary: "#bdbdbd" },
+                    background: { primary: "#121212", secondary: "#1e1e1e" }
+                },
+                sidebar: {
+                    backgroundColor: "#1e1e1e",
+                    textColor: "#e0e0e0",
+                    width: "280px"
+                },
+                typography: {
+                    fontFamily: "Montserrat, sans-serif",
+                    fontSize: "15px",
+                    fontWeight: "bold",
+                    headings: {
+                        fontFamily: "Montserrat, sans-serif",
+                        fontWeight: "700",
+                        lineHeight: "1.4"
+                    },
+                    links: { color: "#bb86fc", visited: "#985eff" }
+                },
+                rightPanel: {
+                    backgroundColor: "#1e1e1e",
+                    textColor: "#e0e0e0",
+                    width: "400px"
+                },
+                schema: {
+                    nestedBackground: "#1b1b1b",
+                    typeNameColor: "#bb86fc"
+                },
+                code: {
+                    backgroundColor: "#242424",
+                    textColor: "#e0e0e0"
+                }
+            }
+        }, document.getElementById("redoc-container"));
+    </script>
 </body>
 </html>

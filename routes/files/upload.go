@@ -12,8 +12,10 @@ import (
 	"popkat/state"
 	"popkat/types"
 
-	docs "github.com/infinitybotlist/eureka/doclib"
-	"github.com/infinitybotlist/eureka/uapi"
+	"popkat/uapi"
+
+	docs "popkat/doclib"
+
 	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
 )

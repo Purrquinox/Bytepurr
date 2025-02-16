@@ -4,8 +4,9 @@ import (
 	"net/http"
 	"popkat/types"
 
-	docs "github.com/infinitybotlist/eureka/doclib"
-	"github.com/infinitybotlist/eureka/uapi"
+	"popkat/uapi"
+
+	docs "popkat/doclib"
 )
 
 func AdminDelete() *docs.Doc {

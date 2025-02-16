@@ -11,11 +11,14 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
+	"sync"
 	"syscall"
 	"time"
 
 	"popkat/api"
+	"popkat/uapi"
 	"popkat/constants"
+	docs "popkat/doclib"
 	"popkat/state"
 	"popkat/types"
 
@@ -23,14 +26,14 @@ import (
 	"popkat/routes/files"
 
 	"github.com/cloudflare/tableflip"
-	docs "github.com/infinitybotlist/eureka/doclib"
+
 	"github.com/infinitybotlist/eureka/jsonimpl"
-	"github.com/infinitybotlist/eureka/uapi"
 	"github.com/infinitybotlist/eureka/zapchi"
 	"go.uber.org/zap"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"golang.org/x/time/rate"
 
 	_ "embed"
 )
@@ -114,6 +117,41 @@ func CompressionMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// Ratelimit Middleware
+type RateLimiterMiddleware struct {
+	limiter *rate.Limiter
+	paths   map[string]struct{}
+	mu      sync.Mutex
+}
+
+func NewRateLimiterMiddleware(rateLimit rate.Limit, burst int, paths []string) *RateLimiterMiddleware {
+	limitedPaths := make(map[string]struct{}, len(paths))
+	for _, path := range paths {
+		limitedPaths[path] = struct{}{}
+	}
+
+	return &RateLimiterMiddleware{
+		limiter: rate.NewLimiter(rateLimit, burst),
+		paths:   limitedPaths,
+	}
+}
+
+func (rl *RateLimiterMiddleware) Middleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		rl.mu.Lock()
+		_, exists := rl.paths[r.URL.Path]
+		allow := rl.limiter.Allow()
+		rl.mu.Unlock()
+
+		if exists && !allow {
+			http.Error(w, "Too Many Requests", http.StatusTooManyRequests)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	state.Setup()
 
@@ -144,14 +182,20 @@ func main() {
 
 	r := chi.NewRouter()
 
+	ratelimitedEndpoints := []string{"/upload"}
+	ratelimit := NewRateLimiterMiddleware(rate.Every(1), 3, ratelimitedEndpoints)
+
 	r.Use(
 		middleware.Recoverer,
 		middleware.RealIP,
 		middleware.CleanPath,
+		middleware.Heartbeat("/ping"),
+		middleware.Compress(5),
+		middleware.Timeout(30*time.Second),
 		corsMiddleware,
 		CompressionMiddleware,
+		ratelimit.Middleware,
 		zapchi.Logger(state.Logger, "api"),
-		middleware.Timeout(30*time.Second),
 	)
 
 	routers := []uapi.APIRouter{

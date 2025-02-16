@@ -9,9 +9,11 @@ import (
 	"popkat/constants"
 	"popkat/state"
 
+	"popkat/uapi"
+
+	docs "popkat/doclib"
+
 	"github.com/go-chi/chi/v5"
-	docs "github.com/infinitybotlist/eureka/doclib"
-	"github.com/infinitybotlist/eureka/uapi"
 	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
 )

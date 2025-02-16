@@ -1,8 +1,9 @@
 package files
 
 import (
+	"popkat/uapi"
+
 	"github.com/go-chi/chi/v5"
-	"github.com/infinitybotlist/eureka/uapi"
 )
 
 type Router struct{}
