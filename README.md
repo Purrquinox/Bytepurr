@@ -1,5 +1,5 @@
-# Popkat v2
-Popkat v2 is a high-performance CDN microservice under Purrquinox, designed to handle file storage and retrieval efficiently. Built with Golang, it leverages MinIO or SeaweedFS for scalable object storage.
+# Bytepurr
+Bytepurr is a high-performance CDN microservice under Purrquinox, designed to handle file storage and retrieval efficiently. Built with Golang, it leverages MinIO or SeaweedFS for scalable object storage.
 
 ## Features
 
@@ -22,8 +22,8 @@ Popkat v2 is a high-performance CDN microservice under Purrquinox, designed to h
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/purrquinox/popkat-v2.git
-   cd popkat-v2
+   git clone https://github.com/purrquinox/bytepurr.git
+   cd bytepurr
    ```
 2. Install dependencies:
    ```sh
@@ -32,19 +32,19 @@ Popkat v2 is a high-performance CDN microservice under Purrquinox, designed to h
 3. Configure environment variables:
    ```sh
    make
-   ./popkat
+   ./bytepurr
    cp -r config.yaml.sample config.yaml
    nano config.yaml  # Update with your credentials
    ```
 4. Build and run the service:
    ```sh
    make
-   ./popkat
+   ./bytepurr
    ```
 
 ## License
 
-Popkat v2 is licensed under the MIT License. See `LICENSE` for details.
+Bytepurr is licensed under the MIT License. See `LICENSE` for details.
 
 ---
 

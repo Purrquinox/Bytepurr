@@ -9,12 +9,12 @@ import (
 	"path/filepath"
 	"time"
 
-	"popkat/state"
-	"popkat/types"
+	"bytepurr/state"
+	"bytepurr/types"
 
-	"popkat/uapi"
+	"bytepurr/uapi"
 
-	docs "popkat/doclib"
+	docs "bytepurr/doclib"
 
 	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
@@ -42,7 +42,7 @@ func generateKey(originalName string) string {
 func UploadDocs() *docs.Doc {
 	return &docs.Doc{
 		Summary:     "Upload File",
-		Description: "Upload a file to Popkat",
+		Description: "Upload a file to Bytepurr",
 		Params: []docs.Parameter{
 			{
 				Name:        "userID",

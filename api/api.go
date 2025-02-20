@@ -1,12 +1,12 @@
 package api
 
 import (
+	"bytepurr/constants"
+	"bytepurr/state"
+	"bytepurr/types"
 	"net/http"
-	"popkat/constants"
-	"popkat/state"
-	"popkat/types"
 
-	"popkat/uapi"
+	"bytepurr/uapi"
 )
 
 type DefaultResponder struct{}

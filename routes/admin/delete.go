@@ -1,12 +1,12 @@
 package admin
 
 import (
+	"bytepurr/types"
 	"net/http"
-	"popkat/types"
 
-	"popkat/uapi"
+	"bytepurr/uapi"
 
-	docs "popkat/doclib"
+	docs "bytepurr/doclib"
 )
 
 func AdminDelete() *docs.Doc {

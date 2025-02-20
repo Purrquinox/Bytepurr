@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"time"
 
-	"popkat/state"
-	"popkat/types"
+	"bytepurr/state"
+	"bytepurr/types"
 
-	"popkat/uapi"
+	"bytepurr/uapi"
 
-	docs "popkat/doclib"
+	docs "bytepurr/doclib"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5"

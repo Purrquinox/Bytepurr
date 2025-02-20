@@ -66,7 +66,7 @@ var api = Openapi{
 	OpenAPI: "3.1.0",
 	Servers: []Server{
 		{
-			Description: "Popkat V2 API",
+			Description: "Bytepurr API",
 			Variables:   map[string]any{},
 		},
 	},

@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"time"
 
-	"popkat/constants"
-	"popkat/state"
+	"bytepurr/constants"
+	"bytepurr/state"
 
-	"popkat/uapi"
+	"bytepurr/uapi"
 
-	docs "popkat/doclib"
+	docs "bytepurr/doclib"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/minio/minio-go/v7"

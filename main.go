@@ -15,15 +15,15 @@ import (
 	"syscall"
 	"time"
 
-	"popkat/api"
-	"popkat/uapi"
-	"popkat/constants"
-	docs "popkat/doclib"
-	"popkat/state"
-	"popkat/types"
+	"bytepurr/api"
+	"bytepurr/constants"
+	docs "bytepurr/doclib"
+	"bytepurr/state"
+	"bytepurr/types"
+	"bytepurr/uapi"
 
-	"popkat/routes/admin"
-	"popkat/routes/files"
+	"bytepurr/routes/admin"
+	"bytepurr/routes/files"
 
 	"github.com/cloudflare/tableflip"
 
@@ -161,10 +161,10 @@ func main() {
 		URL:         "https://popkat.purrquinox.com/",
 		ErrorStruct: types.ApiError{},
 		Info: docs.Info{
-			Title:          "Popkat by Purrquinox",
-			TermsOfService: "https:purrquinox.com/legal/terms",
+			Title:          "Bytepurr by Purrquinox",
+			TermsOfService: "https://purrquinox.com/legal/terms",
 			Version:        "2.0",
-			Description:    "Popkat is a small content delivery network application programming interface made for simplifying Purrquinox operations.",
+			Description:    "Bytepurr is a small content delivery network application programming interface made for simplifying Purrquinox operations.",
 			Contact: docs.Contact{
 				Name:  "Purrquinox",
 				URL:   "https://purrquinox.com",

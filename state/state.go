@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"popkat/config"
+	"bytepurr/config"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/go-playground/validator/v10/non-standard/validators"

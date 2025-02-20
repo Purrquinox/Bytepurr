@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"popkat/uapi"
+	"bytepurr/uapi"
 
 	"github.com/go-chi/chi/v5"
 )

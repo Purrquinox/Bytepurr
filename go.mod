@@ -1,4 +1,4 @@
-module popkat
+module bytepurr
 
 go 1.23.5
 

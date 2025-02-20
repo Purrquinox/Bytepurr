@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"strings"
 
-	docs "popkat/doclib"
+	docs "bytepurr/doclib"
 
 	"github.com/infinitybotlist/eureka/jsonimpl"
 	"go.uber.org/zap"
