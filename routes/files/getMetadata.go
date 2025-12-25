@@ -27,7 +27,7 @@ func GetMetadataDocs() *docs.Doc {
 
 func GetMetadataRoute(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
 	ctx := context.Background()
-	key := chi.URLParam(r, "file")
+	key := chi.URLParam(r, "*")
 	cacheKey := "file_metadata_cache:" + key
 
 	// Check Redis Cache
