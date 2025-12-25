@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net/http"
+	"path"
 	"path/filepath"
 	"time"
 
@@ -17,7 +18,6 @@ import (
 	docs "bytepurr/doclib"
 
 	"github.com/minio/minio-go/v7"
-	"go.uber.org/zap"
 )
 
 type Response struct {
@@ -45,17 +45,31 @@ func UploadDocs() *docs.Doc {
 		Description: "Upload a file to Bytepurr",
 		Params: []docs.Parameter{
 			{
-				Name:        "userID",
+				Name:        "User-ID",
 				In:          "header",
 				Description: "The User ID of the Platform, this should be a unique identifier to make data requests and deletions easy to process.",
 				Required:    true,
 				Schema:      docs.IdSchema,
 			},
 			{
-				Name:        "platform",
+				Name:        "Platform",
 				In:          "header",
 				Description: "The platform that the content is being uploaded for/by.",
 				Required:    true,
+				Schema:      docs.IdSchema,
+			},
+			{
+				Name:        "Attributes",
+				In:          "header",
+				Description: "A JSON string of additional attributes to store with the file. This can be used to store any additional metadata that may be useful for the file.",
+				Required:    false,
+				Schema:      docs.IdSchema,
+			},
+			{
+				Name:        "Directory",
+				In:          "header",
+				Description: "Optional directory path to store the file in. This can be used to organize files within the bucket.",
+				Required:    false,
 				Schema:      docs.IdSchema,
 			},
 		},
@@ -65,8 +79,10 @@ func UploadDocs() *docs.Doc {
 
 func UploadRoute(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
 	// Get user headers
-	userID := r.Header.Get("userID")
-	platform := r.Header.Get("platform")
+	userID := r.Header.Get("User-ID")
+	platform := r.Header.Get("Platform")
+	attributes := r.Header.Get("Attributes")
+	directory := r.Header.Get("Directory")
 
 	if userID == "" || platform == "" {
 		return uapi.HttpResponse{
@@ -100,16 +116,24 @@ func UploadRoute(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
 	defer file.Close()
 
 	// Generate file key
-	fileKey := generateKey(fileHeader.Filename)
+	fileName := generateKey(fileHeader.Filename)
+	fileKey := path.Join(platform, directory, fileName)
 	contentType := fileHeader.Header.Get("Content-Type")
 
 	// Upload to MinIO
+	meta := map[string]string{
+		"userID":   userID,
+		"platform": platform,
+	}
+	if attributes != "" {
+		meta["attributes"] = attributes
+	} else {
+		meta["attributes"] = "null"
+	}
+
 	_, err = state.S3.PutObject(context.Background(), "bytepurr", fileKey, file, fileHeader.Size, minio.PutObjectOptions{
-		ContentType: contentType,
-		UserMetadata: map[string]string{
-			"userID":   userID,
-			"platform": platform,
-		},
+		ContentType:  contentType,
+		UserMetadata: meta,
 	})
 	if err != nil {
 		return uapi.HttpResponse{
@@ -118,23 +142,6 @@ func UploadRoute(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
 				Message: "Failed to upload file to MinIO",
 			},
 		}
-	}
-
-	// Store file metadata in database
-	meta := types.Metadata{
-		Key:      fileKey,
-		UserID:   userID,
-		Platform: platform,
-		FileType: contentType,
-		FileSize: fileHeader.Size,
-	}
-	_, err = state.Pool.Exec(
-		context.Background(),
-		`INSERT INTO "Metadata" (key, "userID", platform, "fileType", "fileSize") VALUES ($1, $2, $3, $4, $5)`,
-		meta.Key, meta.UserID, meta.Platform, meta.FileType, meta.FileSize,
-	)
-	if err != nil {
-		state.Logger.Error("Error inserting metadata into database", zap.Error(err))
 	}
 
 	// Respond to Request

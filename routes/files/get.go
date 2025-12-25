@@ -22,20 +22,14 @@ func GetFileDocs() *docs.Doc {
 	return &docs.Doc{
 		Summary:     "Get File",
 		Description: "Render File",
-		Params: []docs.Parameter{{
-			Name:        "file",
-			In:          "path",
-			Description: "File Key",
-			Required:    true,
-			Schema:      docs.IdSchema,
-		}},
+		Params: []docs.Parameter{},
 		Resp: []byte{},
 	}
 }
 
 func GetRoute(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
 	ctx := context.Background()
-	key := chi.URLParam(r, "file")
+	key := chi.URLParam(r, "*")
 	cacheKey := "file_cache:" + key
 
 	// Check Redis Cache

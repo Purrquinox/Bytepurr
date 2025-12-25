@@ -22,7 +22,7 @@ func (b Router) Routes(r *chi.Mux) {
 	}.Route(r)
 
 	uapi.Route{
-		Pattern: "/{file}",
+		Pattern: "/*",
 		OpId:    "getFile",
 		Method:  uapi.GET,
 		Docs:    GetFileDocs,
@@ -30,10 +30,10 @@ func (b Router) Routes(r *chi.Mux) {
 	}.Route(r)
 
 	uapi.Route{
-		Pattern: "/{file}/meta",
-		OpId:    "getFileMetadata",
-		Method:  uapi.GET,
-		Docs:    GetMetadataDocs,
-		Handler: GetMetadataRoute,
+		Pattern: "/metadata/*",
+	 	OpId:    "getFileMetadata",
+	 	Method:  uapi.GET,
+	 	Docs:    GetMetadataDocs,
+	 	Handler: GetMetadataRoute,
 	}.Route(r)
 }

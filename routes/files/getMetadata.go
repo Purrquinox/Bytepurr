@@ -2,19 +2,17 @@ package files
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"time"
 
 	"bytepurr/state"
-	"bytepurr/types"
 
 	"bytepurr/uapi"
 
 	docs "bytepurr/doclib"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/jackc/pgx/v5"
+	"github.com/minio/minio-go/v7"
 	"go.uber.org/zap"
 )
 
@@ -22,14 +20,8 @@ func GetMetadataDocs() *docs.Doc {
 	return &docs.Doc{
 		Summary:     "Get Metadata",
 		Description: "Get File Metadata",
-		Params: []docs.Parameter{{
-			Name:        "file",
-			In:          "path",
-			Description: "File Key",
-			Required:    true,
-			Schema:      docs.IdSchema,
-		}},
-		Resp: types.Metadata{},
+		Params: []docs.Parameter{},
+		Resp: minio.ObjectInfo{},
 	}
 }
 
@@ -48,20 +40,18 @@ func GetMetadataRoute(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
 	}
 
 	// Fetch metadata from the database
-	var metadata types.Metadata
-	err = state.Pool.QueryRow(
-		context.Background(),
-		`SELECT key, "userID", platform, "fileType", "fileSize" FROM "Metadata" WHERE key = $1`,
+	var metadata minio.ObjectInfo
+	metadata, err = state.S3.StatObject(
+		ctx,
+		"bytepurr",
 		key,
-	).Scan(&metadata.Key, &metadata.UserID, &metadata.Platform, &metadata.FileType, &metadata.FileSize)
-
+		minio.StatObjectOptions{},
+	)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			state.Logger.Warn("No metadata found for file", zap.String("key", key))
-		} else {
-			state.Logger.Error("Error fetching metadata", zap.String("key", key), zap.Error(err))
-		}
+		state.Logger.Error("Failed to fetch metadata from S3", zap.Error(err))
 	}
+
+	state.Logger.Info("User metadata retrieved", zap.Any("userMetadata", metadata.UserMetadata))
 
 	// Cache the file in Redis with an expiration time (e.g., 1 hour)
 	err = state.Redis.Set(ctx, cacheKey, metadata, time.Hour).Err()
