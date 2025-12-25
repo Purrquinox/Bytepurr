@@ -158,7 +158,7 @@ func main() {
 	var err error
 
 	docs.DocsSetupData = &docs.SetupData{
-		URL:         "https://popkat.purrquinox.com/",
+		URL:         "https://bytepurr.purrquinox.com/",
 		ErrorStruct: types.ApiError{},
 		Info: docs.Info{
 			Title:          "Bytepurr by Purrquinox",

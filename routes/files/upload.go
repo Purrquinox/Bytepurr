@@ -104,7 +104,7 @@ func UploadRoute(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
 	contentType := fileHeader.Header.Get("Content-Type")
 
 	// Upload to MinIO
-	_, err = state.S3.PutObject(context.Background(), "popkat", fileKey, file, fileHeader.Size, minio.PutObjectOptions{
+	_, err = state.S3.PutObject(context.Background(), "bytepurr", fileKey, file, fileHeader.Size, minio.PutObjectOptions{
 		ContentType: contentType,
 		UserMetadata: map[string]string{
 			"userID":   userID,

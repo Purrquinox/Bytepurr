@@ -52,7 +52,7 @@ func GetRoute(d uapi.RouteData, r *http.Request) uapi.HttpResponse {
 	}
 
 	// Get the object from MinIO
-	obj, err := state.S3.GetObject(ctx, "popkat", key, minio.GetObjectOptions{})
+	obj, err := state.S3.GetObject(ctx, "bytepurr", key, minio.GetObjectOptions{})
 	if err != nil {
 		state.Logger.Error("Error fetching object", zap.Error(err))
 		return uapi.HttpResponse{
